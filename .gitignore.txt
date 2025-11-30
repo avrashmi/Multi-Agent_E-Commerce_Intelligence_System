@@ -1,0 +1,173 @@
+# ============================================
+# Multi-Agent E-Commerce System
+# Git Ignore File
+# ============================================
+
+# ============================================
+# CRITICAL: Environment & Secrets
+# ============================================
+.env
+.env.local
+.env.*.local
+*.key
+secrets.json
+
+# ============================================
+# Python
+# ============================================
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv
+.ENV
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# ============================================
+# IDEs
+# ============================================
+# VS Code
+.vscode/
+*.code-workspace
+
+# PyCharm
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb
+
+# Spyder
+.spyderproject
+.spyproject
+
+# ============================================
+# Operating System
+# ============================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.directory
+.Trash-*
+
+# ============================================
+# Data Files (Optional)
+# ============================================
+# Uncomment these lines if your data is private/sensitive:
+# data/*.csv
+# data/*.json
+# data/*.xlsx
+
+# Keep sample data but ignore real data:
+# data/real_*.csv
+# data/production_*.csv
+
+# ============================================
+# Logs & Temporary Files
+# ============================================
+*.log
+*.tmp
+*.temp
+*.swp
+*.swo
+*~.nib
+logs/
+temp/
+
+# ============================================
+# Project Specific
+# ============================================
+# Model cache (if you add caching)
+cache/
+*.cache
+
+# Output files
+output/
+results/
+exports/
+
+# Backups
+*.bak
+*.backup
+*.old
+
+# ============================================
+# Documentation Build
+# ============================================
+docs/_build/
+site/
+
+# ============================================
+# Package managers
+# ============================================
+# npm
+node_modules/
+package-lock.json
+
+# Conda
+*.conda

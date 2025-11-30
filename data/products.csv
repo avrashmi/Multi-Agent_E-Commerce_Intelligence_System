@@ -1,0 +1,11 @@
+product_id,title,description,price,category,stock
+1,Wireless Earbuds,Noise-cancelling Bluetooth earbuds,39.99,Electronics,120
+2,Smartwatch Pro,Fitness tracking smartwatch with GPS,89.99,Electronics,80
+3,Laptop Sleeve 15,Shockproof protective laptop sleeve,19.99,Accessories,200
+4,Mechanical Keyboard,RGB backlit mechanical keyboard,59.99,Electronics,60
+5,USB-C Charger 30W,Fast charging USB-C wall adapter,14.99,Electronics,300
+6,Running Shoes,Lightweight breathable running shoes,49.99,Footwear,45
+7,Water Bottle 1L,Insulated stainless steel bottle,24.99,Home,150
+8,Office Chair,Ergonomic mesh office chair,129.99,Furniture,20
+9,LED Desk Lamp,Dimmable study lamp with USB port,22.99,Home,90
+10,Coffee Maker,Automatic drip coffee machine,79.99,Home Appliances,35
