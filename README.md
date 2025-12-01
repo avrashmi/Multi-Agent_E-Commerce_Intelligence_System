@@ -11,7 +11,7 @@ E-commerce platforms face a critical problem: customers abandon purchases due to
 Real-world scenario:
 "I need a laptop for video editing, but there are 50 options. Reading 200+ reviews for each is impossible. Which one is actually good? Can I trust the ratings? Are there better alternatives?"
 
-Current solutions are inadequate:
+Current solutions are inadequate:<br>
 ❌ Rating aggregation: Doesn't explain WHY a product is good<br>
 ❌ Static Q&A: No contextual understanding<br>
 ❌ Manual review reading: Time-consuming and overwhelming<br>
@@ -38,9 +38,7 @@ INTELLIGENT AGENT COLLABORATION
                 
                                                          
   Agent 4 🎯 Checks alternatives                        
-          "Great choice! Highly rated product."       
-                                                        
-
+          "Great choice! Highly rated product."                                                       
         ↓
 Complete, trustworthy answer 
 
@@ -166,6 +164,8 @@ This creates an efficient hybrid system that's both fast and intelligent.
 
 Implementation:
 
+```txt
+
 class MultiAgentSystem:
     def process_query(self, user_query):
         # Sequential execution - each depends on previous
@@ -173,9 +173,8 @@ class MultiAgentSystem:
         sentiment = self.agent2.analyze_reviews(products[0]) # Step 2 (needs product_id)
         answer = self.agent3.answer_question(query, products[0], sentiment) # Step 3 (needs both)
         recommendation = self.agent4.recommend_alternative(products[0], sentiment) # Step 4 (needs sentiment)
-        
         return self._compile_result(products[0], sentiment, answer, recommendation)
-
+```
 Why Sequential:
 
 1. Agent 2 needs product_id from Agent 1
@@ -187,6 +186,7 @@ Why Sequential:
 Implementation:
 python# agents/agent_sentiment.py
 
+```txt
 class SentimentAgent:
     def _analyze_batch(self, batch):
         """Uses Gemini LLM to understand review sentiment"""
@@ -194,11 +194,11 @@ class SentimentAgent:
         1. Sentiment (positive/negative/neutral)
         2. Pros (positive points)
         3. Cons (negative points)
-        
         Reviews: {batch_text}"""
-        
         response = call_gemini(prompt, temperature=0.3)
         return self._parse_response(response)
+```
+
 LLM Tasks:
 
 Agent 2: Sentiment classification, pro/con extraction
@@ -214,6 +214,7 @@ Generate human-like, contextual answers
 Implementation:
 python# agents/agent_retrieval.py
 
+```txt
 class ProductRetrievalAgent:
     def retrieve_products(self, query, top_k=3):
         """Evaluates ALL products in parallel"""
@@ -227,6 +228,7 @@ class ProductRetrievalAgent:
         # Sort and return top k
         scored_products.sort(key=lambda x: x["relevance_score"], reverse=True)
         return scored_products[:top_k]
+```
 Parallel Because:
 
 Each product scored independently
@@ -237,9 +239,10 @@ Results aggregated at end
 Also Used In: Agent 4 (evaluates all alternatives in parallel)
 
 ✅ Concept 4: Loop Agents
-
 Implementation:
 python# agents/agent_sentiment.py
+
+```txt
 class SentimentAgent:
     def analyze_reviews(self, product_id):
         """Loop through review batches"""
@@ -253,9 +256,10 @@ class SentimentAgent:
             # Accumulate results across iterations
             sentiments.extend(batch_result['sentiments'])
             pros.extend(batch_result['pros'])
-            cons.extend(batch_result['cons'])
-        
+            cons.extend(batch_result['cons'])    
         return self._calculate_statistics(sentiments, pros, cons)
+```
+
 Loop Characteristics:
 
 Processes items in batches (3 reviews per batch)
@@ -266,6 +270,8 @@ Continues until all reviews processed
 ✅ Concept 5: Sessions & Memory (In-Memory State Management)
 Implementation:
 python# agents/agent_sentiment.py
+
+```text
 class SentimentAgent:
     def __init__(self, reviews):
         self.memory = {}  # In-memory cache
@@ -280,6 +286,8 @@ class SentimentAgent:
         result = self._analyze_all_reviews(product_id)
         self.memory[product_id] = result  # Store in session
         return result
+```
+
 Memory Benefits:
 
 First query: Analyzes reviews (~12 seconds, 3 API calls)
@@ -293,6 +301,8 @@ Code Location: agents/agent_sentiment.py
 ✅ Concept 6: Rule-Based Logic (Custom Tools)
 Implementation - Agent 1:
 python# agents/agent_retrieval.py
+
+```text
 def calculate_relevance(self, query, product):
     """Rule-based scoring - no AI needed"""
     score = 0.0
@@ -311,8 +321,12 @@ def calculate_relevance(self, query, product):
         score += 3.0
     
     return score
+```
+
 Implementation - Agent 4:
 python# agents/agent_recommendation.py
+
+```text
 def recommend_alternative(self, current, sentiment):
     """Rule-based decision tree"""
     # Rule 1: Check stock
@@ -325,6 +339,7 @@ def recommend_alternative(self, current, sentiment):
     
     # Rule 3: Confirm choice
     return {"needs_alternative": False}
+```
 Why Rules Instead of AI:
 
 Instant decisions (no API latency)
@@ -336,7 +351,8 @@ Sufficient for simple logic
 
 Code Quality & Comments
 Example from agent_sentiment.py:
-python def _analyze_batch(self, batch: List[Dict]) -> Dict[str, List]:
+```text
+def _analyze_batch(self, batch: List[Dict]) -> Dict[str, List]:
     """
     Analyze a batch of reviews using Gemini API.
     
@@ -385,9 +401,12 @@ python def _analyze_batch(self, batch: List[Dict]) -> Dict[str, List]:
             # ... fallback logic
     
     return {'sentiments': sentiments, 'pros': pros, 'cons': cons}
+```
 
 **API Integration & Rate Limiting**
 python# utils/api_helper.py
+
+```text
 def call_gemini(prompt, temperature=0.7):
     """
     Safe wrapper for Gemini API with rate limiting.
@@ -420,16 +439,17 @@ def call_gemini(prompt, temperature=0.7):
             return model.generate_content(prompt).text.strip()
         
         return ""  # Graceful fallback
-Code Location: utils/api_helper.py lines 15-85
+```
 
 **Performance Optimization**
 Batch Processing:
 
 python# Without batching: 9 reviews = 9 API calls = 36 seconds
-# With batching: 9 reviews = 3 API calls = 12 seconds
-# Improvement: 66% reduction in API calls
+With batching: 9 reviews = 3 API calls = 12 seconds
+Improvement: 66% reduction in API calls
 
-# Implementation:
+Implementation:
+```text
 batch_size = 3  # Configurable
 for i in range(0, len(reviews), batch_size):
     batch = reviews[i:i+batch_size]
@@ -444,6 +464,7 @@ python# First query for Product P001:
 # - Saves 12s and 3 API calls
 
 # Total savings: 100% for repeat queries
+```
 
 Testing & Validation
 File: test_complete_system.py
@@ -526,7 +547,7 @@ This will:
 ---
 
 ## Project Structure
-```
+```text
 ecommerce-multi-agent/
 │
 ├── agents/                          # Agent implementations
@@ -556,31 +577,33 @@ ecommerce-multi-agent/
 ├── .gitignore                      # Git ignore rules
 ├── README.md                       # This file
 └── QUICKSTART.md                   # Quick start guide
+```
 
 Usage Examples
 Basic Usage
 python from main import MultiAgentSystem
 from utils.data_loader import load_data
 
-# Load data
+**Load data**
 products, reviews = load_data(use_sample=True)
 
-# Initialize system
+**Initialize system**
 system = MultiAgentSystem(products, reviews)
 
-# Ask question
+**Ask question**
 result = system.process_query("Is this laptop good for video editing?")
 system.display_result(result)
 Interactive Mode
 python from main import interactive_mode
 
-# Start interactive session
+Start interactive session
 interactive_mode()
 
-# Then type questions:
-# > Is this laptop good for gaming?
-# > What's the best phone under $1000?
-# > quit
+Then type questions:
+Is this laptop good for gaming?
+What's the best phone under $1000?
+quit
+
 Using Your Own Data
 Create CSV files in data/ folder:
 products.csv:
@@ -676,35 +699,35 @@ Sequential When Needed: Use dependencies to ensure data quality
 Parallel When Possible: Speed up independent operations
 
 
-✅ Concept 1: Sequential Agents (15 points)
+✅ Concept 1: Sequential Agents 
 Agents 1→2→3→4 with clear dependencies
 Each agent needs previous results
 
-✅ Concept 2: LLM-Powered Agents (15 points)
+✅ Concept 2: LLM-Powered Agents 
 
 Implementation: Agents 2 & 3
 Uses Gemini for sentiment analysis
 Uses Gemini for intelligent Q/A
 
-✅ Concept 3: Parallel Agents (10 points)
+✅ Concept 3: Parallel Agents 
 
 Implementation: Agents 1 & 4
 Evaluates multiple items simultaneously
 No dependencies between evaluations
 
-✅ Concept 4: Loop Agents (10 points)
+✅ Concept 4: Loop Agents 
 
 Implementation: Agent 2 batch processing
 Iterates through review batches
 Accumulates results
 
-✅ Concept 5: Sessions & Memory (10 points)
+✅ Concept 5: Sessions & Memory 
 
 Implementation: Agent 2 caching
 In-memory state management
 75% performance improvement
 
-✅ Concept 6: Rule-Based Logic (10 points)
+✅ Concept 6: Rule-Based Logic 
 
 Implementation: Agents 1 & 4
 Predefined scoring and decision rules
